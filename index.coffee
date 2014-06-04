@@ -9,7 +9,6 @@ module.exports = class GitDigest
   constructor: (@config) ->
 
   onCompile: ->
-    return unless @config.optimize
     @execute 'git rev-parse --short HEAD', @replace
 
   execute: (command, callback) ->
@@ -22,3 +21,12 @@ module.exports = class GitDigest
       paths: [@config.paths.public]
       recursive: true
       silent: true
+
+    for keyword, processer of @config.keyword.map
+      keywordRE = RegExp keyword, "g"
+      replace
+        regex: keywordRE
+        replacement: processer
+        paths: [@config.paths.public]
+        recursive: true
+        silent: true
